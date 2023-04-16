@@ -1,0 +1,51 @@
+logging:
+  level:
+    root: debug
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.data.jpa: DEBUG
+#    org.springframework.boot.autoconfigure: DEBUG
+server:
+  port: 80
+
+spring:
+  datasource:
+   url: jdbc:h2:mem:testdb
+   driver-class-name: org.h2.Driver
+   username: sa
+   password: hello
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${PLACEHOLDER}
+            client-secret: ${PLACEHOLDER}
+
+  jpa:
+#    properties:
+#      javax:
+#        persistence:
+#          schema-generation:
+#            create-source: metadata
+#            scripts:
+#              action: create
+#              create-target: create.sql
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+  sql:
+    init:
+      platform: h2
+      mode: always
+
+
