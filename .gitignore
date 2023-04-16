@@ -4,5 +4,6 @@ target/**
 */.node_modules/**
 .env
 .DS_Store
-.gradle
+.gradle/
+.idea/
 .gradle/**
