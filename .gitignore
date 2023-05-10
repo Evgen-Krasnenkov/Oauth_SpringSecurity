@@ -7,3 +7,5 @@ target/**
 .gradle/
 .idea/
 .gradle/**
+/.gradle/
+/.idea/

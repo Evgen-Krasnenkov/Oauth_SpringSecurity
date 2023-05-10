@@ -1,9 +1,9 @@
 logging:
   level:
-    root: debug
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.data.jpa: DEBUG
+    root: info
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.data.jpa: info
 #    org.springframework.boot.autoconfigure: DEBUG
 server:
   port: 80
