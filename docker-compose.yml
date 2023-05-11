@@ -1,0 +1,13 @@
+version: '1.0'
+
+services:
+  jwt-app:
+    image: jackredd/jwt:1.0
+    container_name: jwt-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "8080:8080"
+      - "5005:5005"

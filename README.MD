@@ -10,7 +10,7 @@ API uses the following technologies:
 - H2 SQL DB
 - Gradle
 
-### Running
+### Running:
 Fill in properties of 
 ```properties
   security:
@@ -22,3 +22,13 @@ Fill in properties of
             client-secret: ${PLACEHOLDER}
 ```            
 Then run the application
+
+### If you want to build image and then run it in a container: 
+
+```bash
+docker build -t jackredd/jwt:1.0 .
+
+docker run -d -p 8080:8080 -p 5005:5005 --name jwt-app jackredd/jwt:1.0
+
+
+```

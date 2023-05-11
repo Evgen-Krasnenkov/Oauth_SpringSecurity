@@ -6,7 +6,7 @@ logging:
     org.springframework.data.jpa: info
 #    org.springframework.boot.autoconfigure: DEBUG
 server:
-  port: 80
+  port: 8080
 
 spring:
   datasource:
