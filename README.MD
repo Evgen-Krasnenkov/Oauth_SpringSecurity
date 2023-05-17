@@ -30,5 +30,4 @@ docker build -t jackredd/jwt:1.0 .
 
 docker run -d -p 8080:8080 -p 5005:5005 --name jwt-app jackredd/jwt:1.0
 
-
 ```
