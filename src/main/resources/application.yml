@@ -47,5 +47,6 @@ spring:
     init:
       platform: h2
       mode: always
+      data-locations: classpath*:data.sql
 
 
