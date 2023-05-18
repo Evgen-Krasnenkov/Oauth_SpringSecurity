@@ -1,13 +1,40 @@
  pipeline {
-     agent any
-
+     agent none
      stages {
-         stage('Build') {
+         stage('ECHO') {
              steps {
-                 echo "Build number is ${currentBuild.number} was executing ${currentBuild.durationString}"
-                 sh 'echo Hello World'
-                 sh 'ls -a'
+                 echo "Build number is ${currentBuild.number} was executing ${currentBuild.durationString}! Also ${env.BUILD_ID}"
+                 echo 'Hello World'
              }
-         }
+        }
+
+                stage('Docker build'){
+                agent {
+                  docker {
+                    image 'gradle:latest'
+                  }
+                }
+                steps {
+                  sh 'gradle build'
+                }
+                }
+        stage('Build'){
+        steps {
+        script{
+                myapp = docker.build("jackredd/jwt:${env.BUILD_ID}")
+        }
+
+        }
+        }
+        stage('Push'){
+        steps {
+        script {
+                 docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                 myapp.push("latest")
+                 myapp.push("${env.BUILD_ID}")
+               }
+        }
+        }
+        }
      }
  }
