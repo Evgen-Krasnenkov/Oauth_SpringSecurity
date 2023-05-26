@@ -1,15 +1,15 @@
 pipeline {
     agent any
     tools {
-        gradle 'GradleJnks'
+        gradle 'gradleJnks'
         jdk 'java17'
     }
-    environment {
-        PROJECT_ID = 'apt-rope-381319'
-        CLUSTER_NAME = 'cluster-1'
-        LOCATION = 'us-central1-c'
-        CREDENTIALS_ID = 'kubeGkeCreds'
-    }
+//     environment {
+//         PROJECT_ID = 'apt-rope-381319'
+//         CLUSTER_NAME = 'cluster-1'
+//         LOCATION = 'us-central1-c'
+//         CREDENTIALS_ID = 'kubeGkeCreds'
+//     }
     stages {
         stage('ECHO') {
             steps {
@@ -17,11 +17,7 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        stage('Scm checkout') {
-            steps {
-                checkout scm
-            }
-        }
+
 //        stage('Build Docker') {
 //            agent any
 //            steps {
