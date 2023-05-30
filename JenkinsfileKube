@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradleJnks'
+        jdk 'java17'
+    }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('kras-dockerhub')
+        IMAGE_TAG = "jackredd/jwt:${env.BUILD_ID}"
+    }
+    stages {
+        stage('ECHO') {
+            steps {
+                echo "Build number is ${currentBuild.number} was executing ${currentBuild.durationString}! Also ${env.BUILD_ID}"
+                echo 'Hello World'
+            }
+        }
+        stage('Deploy Kubernetes') {
+            steps {
+			    sh 'ls -ltr'
+			    sh 'pwd'
+			    sh "sed -i 's/tagversion/22/g' kube-deployment.yaml"
+                script {
+                  kubernetesDeploy(configs: "kube-deployment.yaml", kubeconfigId: "0dfe1762-8dc9-4d99-855b-32174fa785ed")
+                }
+              }
+            }
+    }
+}

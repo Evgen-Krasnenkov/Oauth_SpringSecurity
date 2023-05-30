@@ -27,7 +27,7 @@ spec:
             - name: http-port
               containerPort: 8080
             - name: jnlpport
-              containerPort: 50000
+              containerPort: 52000
           volumeMounts:
             - name: jenkins-data
               mountPath: /var/jenkins_home

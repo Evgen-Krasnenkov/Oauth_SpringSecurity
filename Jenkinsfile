@@ -15,22 +15,6 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                chmod +x ./gradlew
-                docker build -t "$IMAGE_TAG" .
-                '''
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                  sh '''
-                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                     docker push "$IMAGE_TAG"
-                  '''
-             }
-        }
         stage('Build with Gradle') {
                     steps {
                         sh 'java -version'
@@ -38,6 +22,32 @@ pipeline {
                         sh './gradlew build --no-daemon'
                     }
         }
+        stage('Build Image') {
+            steps {
+                sh '''
+                chmod +x ./gradlew
+                docker build -t "$IMAGE_TAG" .
+                '''
+            }
+        }
+        stage('Push Image') {
+            steps {
+                  sh '''
+                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                     docker push "$IMAGE_TAG"
+                  '''
+             }
+        }
+        stage('Deploy Kubernetes') {
+            steps {
+			    sh 'ls -ltr'
+			    sh 'pwd'
+			    sh "sed -i 's/tagversion/${env.BUILD_ID}/g' kube-deployment.yaml"
+                script {
+                  kubernetesDeploy(configs: "kube-deployment.yaml", kubeconfigId: "kubernetes")
+                }
+              }
+            }
     }
     post {
         always {
