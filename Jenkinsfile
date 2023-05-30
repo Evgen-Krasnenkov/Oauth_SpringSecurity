@@ -4,12 +4,10 @@ pipeline {
         gradle 'gradleJnks'
         jdk 'java17'
     }
-//     environment {
-//         PROJECT_ID = 'apt-rope-381319'
-//         CLUSTER_NAME = 'cluster-1'
-//         LOCATION = 'us-central1-c'
-//         CREDENTIALS_ID = 'kubeGkeCreds'
-//     }
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('kras-dockerhub')
+        IMAGE_TAG = "jackredd/jwt:${env.BUILD_ID}"
+    }
     stages {
         stage('ECHO') {
             steps {
@@ -17,39 +15,34 @@ pipeline {
                 echo 'Hello World'
             }
         }
-
-//        stage('Build Docker') {
-//            agent any
-//            steps {
-//                sh 'whoami'
-//                sh 'docker -v'
-//            }
-//        }
-        stage('Build') {
-            steps {
-                sh 'java -version'
-                sh 'chmod +x gradlew'
-                sh './gradlew build --no-daemon'
-            }
-        }
         stage('Build Docker Image') {
             steps {
-                sh 'whoami'
-                sh 'docker -v'
-                script {
-                    myimage = docker.build("jackredd/jwt:${env.BUILD_ID}")
-                }
+                sh '''
+                chmod +x ./gradlew
+                docker build -t "$IMAGE_TAG" .
+                '''
             }
         }
-        stage('Push') {
+        stage('Push Docker Image') {
             steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                        myapp.push("latest")
-                        myapp.push("${env.BUILD_ID}")
+                  sh '''
+                     echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                     docker push "$IMAGE_TAG"
+                  '''
+             }
+        }
+        stage('Build with Gradle') {
+                    steps {
+                        sh 'java -version'
+                        sh 'chmod +x gradlew'
+                        sh './gradlew build --no-daemon'
                     }
-                }
-            }
         }
     }
+    post {
+        always {
+             sh 'docker logout'
+        }
+    }
+
 }
